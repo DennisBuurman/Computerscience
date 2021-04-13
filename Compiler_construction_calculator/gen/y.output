@@ -1,0 +1,492 @@
+Grammar
+
+    0 $accept: line $end
+
+    1 line: %empty
+    2     | line stmt '\n'
+    3     | line error '\n'
+
+    4 stmt: expr
+
+    5 expr: expr '+' expr
+    6     | expr '-' expr
+    7     | expr '*' expr
+    8     | expr '/' expr
+    9     | expr '%' expr
+   10     | expr '!'
+   11     | '-' expr
+   12     | expr POWER expr
+   13     | '(' expr ')'
+   14     | '|' expr '|'
+   15     | number
+
+   16 number: DIGIT
+   17       | number DIGIT
+   18       | PI
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '\n' (10) 2 3
+    '!' (33) 10
+    '%' (37) 9
+    '(' (40) 13
+    ')' (41) 13
+    '*' (42) 7
+    '+' (43) 5
+    '-' (45) 6 11
+    '/' (47) 8
+    '|' (124) 14
+    error (256) 3
+    DIGIT (258) 16 17
+    PI (259) 18
+    UMINUS (260)
+    POWER (261) 12
+
+
+Nonterminals, with rules where they appear
+
+    $accept (17)
+        on left: 0
+    line (18)
+        on left: 1 2 3
+        on right: 0 2 3
+    stmt (19)
+        on left: 4
+        on right: 2
+    expr (20)
+        on left: 5 6 7 8 9 10 11 12 13 14 15
+        on right: 4 5 6 7 8 9 10 11 12 13 14
+    number (21)
+        on left: 16 17 18
+        on right: 15 17
+
+
+State 0
+
+    0 $accept: . line $end
+
+    $default  reduce using rule 1 (line)
+
+    line  go to state 1
+
+
+State 1
+
+    0 $accept: line . $end
+    2 line: line . stmt '\n'
+    3     | line . error '\n'
+
+    $end   shift, and go to state 2
+    error  shift, and go to state 3
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    stmt    go to state 9
+    expr    go to state 10
+    number  go to state 11
+
+
+State 2
+
+    0 $accept: line $end .
+
+    $default  accept
+
+
+State 3
+
+    3 line: line error . '\n'
+
+    '\n'  shift, and go to state 12
+
+
+State 4
+
+   16 number: DIGIT .
+
+    $default  reduce using rule 16 (number)
+
+
+State 5
+
+   18 number: PI .
+
+    $default  reduce using rule 18 (number)
+
+
+State 6
+
+   14 expr: '|' . expr '|'
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 13
+    number  go to state 11
+
+
+State 7
+
+   13 expr: '(' . expr ')'
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 14
+    number  go to state 11
+
+
+State 8
+
+   11 expr: '-' . expr
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 15
+    number  go to state 11
+
+
+State 9
+
+    2 line: line stmt . '\n'
+
+    '\n'  shift, and go to state 16
+
+
+State 10
+
+    4 stmt: expr .
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+   10     | expr . '!'
+   12     | expr . POWER expr
+
+    '-'    shift, and go to state 17
+    '+'    shift, and go to state 18
+    '%'    shift, and go to state 19
+    '/'    shift, and go to state 20
+    '*'    shift, and go to state 21
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+    $default  reduce using rule 4 (stmt)
+
+
+State 11
+
+   15 expr: number .
+   17 number: number . DIGIT
+
+    DIGIT  shift, and go to state 24
+
+    $default  reduce using rule 15 (expr)
+
+
+State 12
+
+    3 line: line error '\n' .
+
+    $default  reduce using rule 3 (line)
+
+
+State 13
+
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+   10     | expr . '!'
+   12     | expr . POWER expr
+   14     | '|' expr . '|'
+
+    '|'    shift, and go to state 25
+    '-'    shift, and go to state 17
+    '+'    shift, and go to state 18
+    '%'    shift, and go to state 19
+    '/'    shift, and go to state 20
+    '*'    shift, and go to state 21
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+
+State 14
+
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+   10     | expr . '!'
+   12     | expr . POWER expr
+   13     | '(' expr . ')'
+
+    ')'    shift, and go to state 26
+    '-'    shift, and go to state 17
+    '+'    shift, and go to state 18
+    '%'    shift, and go to state 19
+    '/'    shift, and go to state 20
+    '*'    shift, and go to state 21
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+
+State 15
+
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+   10     | expr . '!'
+   11     | '-' expr .
+   12     | expr . POWER expr
+
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+    $default  reduce using rule 11 (expr)
+
+
+State 16
+
+    2 line: line stmt '\n' .
+
+    $default  reduce using rule 2 (line)
+
+
+State 17
+
+    6 expr: expr '-' . expr
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 27
+    number  go to state 11
+
+
+State 18
+
+    5 expr: expr '+' . expr
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 28
+    number  go to state 11
+
+
+State 19
+
+    9 expr: expr '%' . expr
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 29
+    number  go to state 11
+
+
+State 20
+
+    8 expr: expr '/' . expr
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 30
+    number  go to state 11
+
+
+State 21
+
+    7 expr: expr '*' . expr
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 31
+    number  go to state 11
+
+
+State 22
+
+   10 expr: expr '!' .
+
+    $default  reduce using rule 10 (expr)
+
+
+State 23
+
+   12 expr: expr POWER . expr
+
+    DIGIT  shift, and go to state 4
+    PI     shift, and go to state 5
+    '|'    shift, and go to state 6
+    '('    shift, and go to state 7
+    '-'    shift, and go to state 8
+
+    expr    go to state 32
+    number  go to state 11
+
+
+State 24
+
+   17 number: number DIGIT .
+
+    $default  reduce using rule 17 (number)
+
+
+State 25
+
+   14 expr: '|' expr '|' .
+
+    $default  reduce using rule 14 (expr)
+
+
+State 26
+
+   13 expr: '(' expr ')' .
+
+    $default  reduce using rule 13 (expr)
+
+
+State 27
+
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    6     | expr '-' expr .
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+   10     | expr . '!'
+   12     | expr . POWER expr
+
+    '%'    shift, and go to state 19
+    '/'    shift, and go to state 20
+    '*'    shift, and go to state 21
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+    $default  reduce using rule 6 (expr)
+
+
+State 28
+
+    5 expr: expr . '+' expr
+    5     | expr '+' expr .
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+   10     | expr . '!'
+   12     | expr . POWER expr
+
+    '%'    shift, and go to state 19
+    '/'    shift, and go to state 20
+    '*'    shift, and go to state 21
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+    $default  reduce using rule 5 (expr)
+
+
+State 29
+
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+    9     | expr '%' expr .
+   10     | expr . '!'
+   12     | expr . POWER expr
+
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+    $default  reduce using rule 9 (expr)
+
+
+State 30
+
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    8     | expr '/' expr .
+    9     | expr . '%' expr
+   10     | expr . '!'
+   12     | expr . POWER expr
+
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+    $default  reduce using rule 8 (expr)
+
+
+State 31
+
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    7     | expr '*' expr .
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+   10     | expr . '!'
+   12     | expr . POWER expr
+
+    '!'    shift, and go to state 22
+    POWER  shift, and go to state 23
+
+    $default  reduce using rule 7 (expr)
+
+
+State 32
+
+    5 expr: expr . '+' expr
+    6     | expr . '-' expr
+    7     | expr . '*' expr
+    8     | expr . '/' expr
+    9     | expr . '%' expr
+   10     | expr . '!'
+   12     | expr . POWER expr
+   12     | expr POWER expr .
+
+    POWER  shift, and go to state 23
+
+    $default  reduce using rule 12 (expr)
