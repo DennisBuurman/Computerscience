@@ -1,0 +1,14 @@
+insert 1 5
+insert 2 9
+insert 3 11
+insert 4 14
+insert 5 18
+insert 6 19
+insert 7 21
+insert 8 33
+insert 9 17
+insert 10 27
+print
+decreaseKey 7 1
+print
+q
