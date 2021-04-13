@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# This script executes all tests of every folder in this directory
+# Run from main dir: "./tests/dotests"
+# NB: this script only checks whether the compiler gives the
+# correct return value.
+
+COMPILER="./comp"
+TOT_ERRS=0
+
+if ! test -f "$COMPILER"; then
+	echo "Could not find compiler $COMPILER"
+fi
+
+# Loop over all folders
+for i in $(find ./tests/ -maxdepth 1 -mindepth 1 -type d -printf '%f\n'); do
+    NUM_ERRS=0
+    
+    # Dir empty
+    if [ -z "$(ls -A ./tests/$i)" ]; then
+        continue
+    fi
+    
+    echo "TESTING $i"
+    
+    # Loop over all files in this folder
+    for j in ./tests/$i/*; do
+        # Get expected return value
+        EXPECTED="${j: -1}"
+        
+        # Feed file to compiler
+        $COMPILER < $j > /dev/null 2>/dev/null
+        
+        # Check return value
+        if [ ${?: 0} != ${EXPECTED: 0} ]; then
+            NUM_ERRS=$((NUM_ERRS+1))
+            TOT_ERRS=$((TOT_ERRS+1))
+        fi
+    done
+    echo "Failed $NUM_ERRS / $(ls -A ./tests/$i | wc -l)"
+    echo "==================================="
+    echo ""
+done
+
+echo "Total errors: $TOT_ERRS"
+

@@ -1,0 +1,26 @@
+program declarations;
+
+var 
+  a, b: integer;
+var 
+  c: real;
+
+function returner(d: integer): integer;
+var 
+  e: real;
+begin
+  returner := d
+end;
+
+procedure nothing(f: real);
+var 
+  g: integer;
+begin
+    g := 0
+end;
+
+begin
+  a := 1;
+  b := 2;
+  c := 3.0
+end.

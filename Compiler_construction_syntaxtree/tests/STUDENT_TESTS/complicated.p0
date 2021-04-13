@@ -1,0 +1,20 @@
+program complicatedcalls;
+
+var a, b, c: integer;
+var x, y, z: real;
+
+function intargs(foo, bar: integer): integer;
+  begin
+    intargs := 5
+  end;
+  
+function mixedargs(foo: integer; bar: real): real;
+  begin
+    mixedargs := foo
+  end;
+
+begin
+  x := intargs(a, intargs(b, intargs(c, c)));
+  y := mixedargs(a, intargs(b, intargs(c, c)));
+  z := mixedargs(intargs(intargs(a, a), intargs(b, intargs(c-3, c))), mixedargs(intargs(a, b+5), mixedargs(a, b)))
+end. 

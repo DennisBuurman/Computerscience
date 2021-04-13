@@ -1,0 +1,17 @@
+program towel;
+
+var
+  a,b: integer;
+var
+  c: real;
+
+function guide(x, y: integer): real;
+
+begin
+  guide := x + y
+end;
+
+begin
+  { correct function call }
+  c := guide(a, b)
+end.

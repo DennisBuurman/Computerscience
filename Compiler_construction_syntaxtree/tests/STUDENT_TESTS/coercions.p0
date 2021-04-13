@@ -1,0 +1,35 @@
+program coercions;
+
+var
+  i1, i2, i3: integer;
+var
+  r1, r2: real;
+
+function addreal(a, b: real): real;
+begin
+  addreal := a + b
+end;
+
+begin
+  { coercion on number 5 }
+  r2 := 5;
+  
+  { coercion on i2 in parameters }
+  r1 := addreal(i2,r1);
+  
+  { coercion on simple_expression }
+  r1 := i1 + r2;
+  
+  { coerion on i3 on simple_expression }
+  r2 := r1 * i3;
+  
+  
+  { coercion in boollikeexp }
+  i3 := 9;
+  r2 := 87;
+  if i3 <= r2 then 
+    writereal(r2)
+  else
+    writeinteger(i3)
+  
+end.

@@ -1,0 +1,41 @@
+program faultyexp;
+
+var
+  i1, i2: integer;
+var 
+  r1, r2: real;
+
+procedure writing;
+var
+  a, b: integer;
+begin
+  if a < b then
+    writeint(a)
+  else
+    writeint(b)
+end;
+
+begin
+  
+  { or on non-integer }
+  i1 := i2 or r1;
+  
+  { integer division on non-integer }
+  i1 := r2 div i1;
+  
+  { and operation with non-integer }
+  i2 := i1 div r1;
+  
+  { not operator on non-integer }
+  i1 := not r1;
+  
+  { invalid operator simple_expression }
+  i1 := i1 ** i2;
+  
+  { using procedure in an assignment expression }
+  i2 := writing();
+  
+  { using a random variable, non-function, as a function }
+  r1 := i1(i2);
+  
+end.
