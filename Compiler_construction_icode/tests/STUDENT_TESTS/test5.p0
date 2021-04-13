@@ -1,0 +1,29 @@
+{test identity optimization}
+{optimizations need to be enabled; -O1}
+{expected: 0 errors, 5 warnings}
+
+program identity;
+
+var i1, i2: integer;
+var r1, r2: real;
+
+begin
+  {identity with integers}
+  i1 := 1 * 5;
+  i2 := 99 * 1;
+  i1 := i2 + 0;
+  i2 := 0 + 0 + 0 + 0;
+  i1 := i2 div 1;
+  
+  {identity with reals}
+  r1 := r2 * 1.0;
+  r2 := 1.0 + 0.0;
+  r1 := r2 / 1.0;
+  
+  {identity with coercions}
+  r2 := 1.0 * 5;
+  r1 := 99.0 * 1;
+  r2 := 7 + 0;
+  r1 := 1 * 1 * 1 * 1;
+  r2 := r1 / 1
+end.

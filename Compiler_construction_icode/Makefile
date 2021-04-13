@@ -1,0 +1,56 @@
+#
+# Makefile for assignment 3 of the Compiler Construction course.
+# LIACS, Leiden University.
+#
+
+CC        = gcc
+CXX       = g++
+CXXFLAGS  = -std=c++11 -ggdb -Wall
+
+WARNINGS  = -Wall
+OTHERS    = -g -std=c++11
+DEFINES   = -DDEBUG
+IDIRS     = -I.
+
+CFLAGS    = $(WARNINGS) $(OTHERS) $(DEFINES) $(IDIRS)
+LFLAGS    = 
+YFLAGS    = --defines --debug --verbose
+LDFLAGS   = -g
+LOADLIBS  = -lfl -lm
+
+#
+# If you want to add another C/C++ file to the compiler, add the name of the
+# corresponding .o file to the OBJFILES macro below in Makefile.in:
+#
+OBJFILES  = debug.o main.o ICGenerator.o
+OBJDIR    = gen/
+OBJS      = $(addprefix $(OBJDIR),$(OBJFILES))
+
+IMPORTANT	= comp.[hly] *.h *.c *.cc \
+		  Makefile
+
+.PHONY: all first clean dirs
+
+all: Makefile comp
+
+# To be executed before the very first build
+first: dirs
+
+Makefile: Makefile.in
+	./config.status
+
+# Dependency stuff
+comp: $(OBJS)
+	$(CXX) $(LDFLAGS) -o $@ $^ -Lstatic -lcoco3 $(LOADLIBS)
+
+clean:	
+	rm -f $(OBJDIR)*.o comp
+dirs:
+	mkdir gen
+
+# Dependency stuff
+$(OBJDIR)%.o: %.c
+	$(CXX) $(CFLAGS) -c -o $@ $<
+
+$(OBJDIR)%.o: %.cc
+	$(CXX) $(CFLAGS) -c -o $@ $<

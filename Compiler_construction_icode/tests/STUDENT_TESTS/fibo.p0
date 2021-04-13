@@ -1,0 +1,18 @@
+{the reasonable test as required by the assignment}
+program fibonacci;
+
+function fibo(n: integer): integer;
+begin
+  if (n <= 1) then
+    begin
+      fibo := 1
+    end
+  else
+    begin
+      fibo := fibo(n - 1) + fibo(n - 2)
+    end
+end;
+
+begin
+  writeinteger(fibo(5))
+end.

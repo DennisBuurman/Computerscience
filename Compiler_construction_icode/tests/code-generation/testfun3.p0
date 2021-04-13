@@ -1,0 +1,29 @@
+program testfun3;
+
+var
+  global: integer;
+
+function fun (i: integer): integer;
+begin
+
+  if (global=10) then
+    fun := 7
+  else
+  begin
+    global := global + 1;
+    writeinteger (global);
+    fun := fun (i+1) + 1;
+    if (fun > 10) then
+      fun := fun + 10
+    else
+      fun := fun + 5
+  end
+
+end;
+
+begin
+
+  global := 0;
+  writeinteger (fun (0))
+
+end.

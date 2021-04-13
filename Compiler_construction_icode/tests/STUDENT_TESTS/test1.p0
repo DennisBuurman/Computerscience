@@ -1,0 +1,45 @@
+{test zero-product optimization}
+{optimizations must be enabled to test; -O1}
+{expected: 0 errors, 6 warnings}
+
+program ZeRo;
+
+var i1, i2: integer;
+var r1, r2: real;
+
+function mulZeroI(num: integer): integer;
+var zero: integer;
+begin
+  zero := 0;                  {should not make expressions using this variable 0}
+  mulZeroI := num * zero
+end;
+
+function mulZeroR(num: real): real;
+begin
+  mulZeroR := num * 0.0
+end;
+
+procedure coercions(i: integer);
+begin
+  {zero-products with coercion nodes}
+  r1 := r2 * 0;               {zero-product with coerced zero} 
+  r2 := i * 0.0;              {zero-product with coerced var}
+  r1 := r2 * 0 * 0.0 * i;     {zero-product with coercions}
+  r2 := 5 * 0;                {zero-product with integer number}
+  r1 := 0 * 7.7               {zero-product with real number}
+end;
+
+begin
+  {integer zero-products}
+  i1 := mulZeroI(9);          {zero-product in subprogram}
+  i2 := mulZeroI(i1) * 0;     {zero-product with subprogram; should not delete subprogram}
+  i1 := 0 * i2 * 0 * 0 * 0;   {multiple zero-products in one expression}
+  
+  {real zero-products}
+  r1 := mulZeroR(9.0);        {zero-product in subprogram}
+  r2 := 0.0 * mulZeroR(r1);   {zero-product with subprogram; should not delete subprogram}
+  r1 := 0.0 * 0.0 * r2 * r2;  {multiple zero-products in one expression}
+  
+  {zero-products in procedure}
+  coercions(i1)
+end.

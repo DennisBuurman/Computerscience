@@ -1,0 +1,32 @@
+{test constant folding}
+{optimizations need to be enabled; -O1}
+{expected: 0 errors, 3 warnings}
+
+program cfolding;
+
+var i1, i2: integer;
+var r1, r2: real;
+
+begin
+  {integer expression folding}
+  i1 := 2+2;                                      {i1 = 4}
+  i2 := ((((1 + 2) * 3) div 4) + 5) mod 6;        {i2 = 1}
+  i1 := 2 or 8 and 8;                             {i1 = 10}
+  i2 := i1 * 5 + 5 div 5;                         {i2 = i1*5 + 1}
+  i1 := ((-9*9) - (-9*9));                        {i1 = 0}
+  
+  {real expression folding}
+  r1 := 2.0 + 2.0;                                {r1 = 4.0}
+  r2 := ((((1.0 + 2.0) * 3.0) / 4.0) + 5.0);      {r2 = 7.25}
+  r1 := 9.9 / 1.1 + r2 * (6.0 * 6.0);             {r1 = 9.0 + r2*36}
+  
+  {real expression folding with coercions}
+  r2 := (99 div 9) + 3.0 * 8.5;                   {r2 = 36.5}
+  r1 := 8 * 5.0 + 0.0 / 2 * 1.7 - 0.9 * 99.9;     {r1 = -49.909996}
+  
+  {folding in boolexpr and function param}
+  if((8 * 7 - 42) mod 10 < 5 * 5 div 5) then      {4 < 5}
+  begin
+    writeinteger(1+2*1)                           {writeinteger(3)}
+  end
+end.

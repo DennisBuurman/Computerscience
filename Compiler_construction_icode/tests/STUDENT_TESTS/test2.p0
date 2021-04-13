@@ -1,0 +1,66 @@
+{test if-else constructions}
+{optimizations not necessarily needed}
+{expected: 0 errors, 0 warnings}
+
+program ifelse;
+
+var i1, i2: integer;
+var r1, r2: real;
+
+begin
+  {if without else}
+  if (i1 > i2) then
+    begin
+      i1 := 1
+    end;
+  
+  writeinteger(1); {to separate the constructs for readability}
+  
+  {if with else}
+  if (i1 < i2) then
+    begin
+      i2 := 1
+    end
+  else
+    begin
+      i1 := 1
+    end;
+    
+  writeinteger(2); {to separate the constructs for readability}
+    
+  {nested if}
+  if (i1 = i2) then
+    begin
+      if (i1 > 0) then
+        begin
+          i2 := 0
+        end
+    end
+  else
+    begin
+      i2 := 1
+    end;
+  
+  writeinteger(3); {to separate the constructs for readability}
+  
+  {multiple nested if-else}
+  if (i1 < i2) then
+    begin
+      if (i2 <> i1) then
+        begin
+          i1 := i2
+        end
+      else
+        begin
+          i2 := i1
+        end
+    end
+  else
+    begin
+      if (i2 = 4) then
+        begin
+          i1 := 4
+        end
+    end
+  
+end.

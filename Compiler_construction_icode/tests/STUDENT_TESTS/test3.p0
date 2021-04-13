@@ -1,0 +1,45 @@
+{test while constructions}
+{optimizations not necessarily needed}
+{expected: 0 errors, 0 warnings}
+
+program whiles;
+
+var i1, i2: integer;
+
+begin
+  {single while loop}
+  i1 := 0;
+  while (i1 < 5) do
+    begin
+      i1 := i1 + 1
+    end;
+    
+  writeinteger(1); {to separate the loops for readability}
+  
+  {nested while loop}
+  while (i1 > 0) do
+    begin
+      i2 := 0;
+      while (i2 < 5) do
+        begin
+          i2 := i2 + 1
+        end;
+      i1 := i1 - 1
+    end;
+  
+  writeinteger(2); {to separate the loops for readability}
+  
+  {nested while loops}
+  while (i1 < 3) do
+    begin
+      while (i2 > 0) do
+        begin
+          i2 := i2 - 1
+        end;
+      while (i2 < 3) do
+        begin
+          i2 := i2 + 1
+        end;
+      i1 := i1 + 1
+    end
+end.
