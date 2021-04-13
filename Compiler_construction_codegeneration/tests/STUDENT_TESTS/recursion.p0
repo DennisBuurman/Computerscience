@@ -1,0 +1,20 @@
+{testing if a variable is allocated/deallocated correctly if used in multiple branches}
+{expected result: 41713}
+
+program recursivecalls;
+
+function recurse(a: integer): integer;
+begin
+  if a = 0 then
+    begin
+      recurse := 5
+    end
+  else
+    begin
+      recurse := recurse + recurse(a-1)
+    end
+end;
+
+begin
+  writeinteger(recurse(5)) {expected result: 160}
+end.

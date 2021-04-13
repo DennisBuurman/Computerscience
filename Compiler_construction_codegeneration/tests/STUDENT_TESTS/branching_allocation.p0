@@ -1,0 +1,38 @@
+{testing if a variable is allocated/deallocated correctly if used in multiple branches}
+{expected result: 41713}
+
+program branching;
+
+var foo, bar: integer;
+
+procedure test;
+begin
+  if (foo < bar) then
+    begin
+      if (bar - foo < foo + foo) then
+        begin
+          foo := 4
+        end
+      else
+        begin
+          foo := bar + 3
+        end
+    end
+  else
+    begin
+      while (foo > bar) do
+        begin
+          foo := foo - 2
+        end
+    end;
+  writeinteger(foo)
+end;
+
+begin
+  foo := 2;
+  bar := 3;
+  test; {foo := 4}
+  bar := 14;
+  test; {foo := 17}
+  test {foo := 13}
+end.

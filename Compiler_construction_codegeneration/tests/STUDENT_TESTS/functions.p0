@@ -1,0 +1,19 @@
+program example;
+
+var x, y: integer;
+
+function bar(in: integer): integer;
+begin
+  bar := in
+end;
+
+function foo(a: integer): integer;
+begin
+  foo := a
+end;
+
+begin
+  x := 8;
+  y := foo(bar(x));
+  writeinteger(y)
+end.
