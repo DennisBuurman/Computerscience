@@ -1,0 +1,100 @@
+
+REPORT COMPUTER ARCHITECTURE: ISA EMULATION
+By Dennis Buurman (s2027100) and Jerry Schonenberg (s2041022)
+November 11, 2018
+
+
+
+1. CONTROLLING DIFFERENT COMPONENTS WITH CLASS PROCESSOR
+The first called component in every cycle of Processor::run is instructionFetch. Within 
+instructionFetch we read the instruction from the PC (program counter), increment the PC by 4 
+(because an instruction is 32 bits, 4 bytes). The next component is the instruction decoder. 
+The processor sends the fetched instruction to the decoder where that instruction can be parsed. 
+The instruction decoder parses as follows. First, the opcode is read. With the opcode the type 
+of the instruction can be determined. We also checked if the type needs to perform a load or store. 
+Then the rest of the instruction can be parsed properly. After parsing is completed the parts are 
+set into the decoder (decoded). Next the parsed instruction is sent to the ALU. After this the ALU 
+executes the instruction. The ALU sends the result back to the processor. The result is handled 
+differently depending on the instruction. The result is either used to perform a load or store 
+before writing it back or the write back is performed immediately. Then the cycle is completed 
+and starts again with a new instruction fetch. The cycle stops if the test end marker is encountered 
+or a system halt request occurs.
+
+Choices for implementation:
+1. Parsing the instruction with parser():
+We determine the opcode by a modulo operation of the instruction with 2\^7. We do this with a 
+function parser that takes an instruction and a number 'n' that represents the number of bits you 
+want to isolate. The isolated bits are then shifted out of the instruction. We chose this because 
+after checking the opcode for a type you can just call the parser in the right order[1]. 
+This results in a smaller parse function.
+	[1]: We made a SplitX(uint32\_t instruction\_part) function for every type with 'X' denotes a type. 
+	These functions make sure the instruction is parsed in the right way.
+
+2. Getting the store and load size with getSize():
+To implement this we made a switch statement on the funct3 from the instruction and returned the size.
+
+3. The decodeInstruction function:
+We made a switch statement that first selects on opcode and then on funct3 and funct7 when needed. 
+We fill in the data of the decoder while selecting.
+
+4. Content of DecodedInstruction:
+We put a instructionType enum in the decoder to set the type.
+The DecodedInstruction also contains several uintx\_t's with 'x' a size for the uint. These 
+uints are opcode, rd, funct3, rs1, rs2, funct7, imm (immediate) and len\_sl(store/load size). 
+We also added an int length (of immediate), a bool address (set if address) and a bool load 
+(check if load is needed).
+
+5. Execution in the ALU:
+We once again made a switch statement for the opcode, funct3 and funct7. This time we used the 
+switch to determine how to get the result we want from an instruction. Most of the time we needed 
+one or more helper functions to get the right result. These functions are: 
+	1) to2sComplement(uint64\_t value) that returns the 2's complement of value
+	2) signExtend(uint32\_t input, int length) that returns a sign extended version of the input. 
+		We sign extend bij checking the most significant bit of the input and shift it into a 64 bit 
+		filled with 1's if most significant bit = 1 or a 64 bit filled with 0's if most significant 
+		bit = 0. We choose this because it was easy to implement and because it works.
+	3) ADD(uint64\_t number1, uint64\_t number2) that returns the result of the 2's complement 
+		addition of number1 and number2. We did this because you can easily implement subtraction 
+		with 2's complement calculations.
+
+6. performLoad and performStore:
+We used a switch on the given size to load and store the right size on the address. We choose 
+this BECAUSE????
+
+7. Within memory we decide what to write, load and store based the booleans in the decoder. 
+
+
+
+2. FUNCTIONALITIES OF THE ISA EMULATOR
+As far as we know every instruction that is implemented in our emulator works properly. 
+A little more in-depth the sign extender, parser and 2's complement functions work as intended.
+The only thing what does not work are the floating point instructions and of course the instructions 
+which are not implemented into our emulator. So only a select few programs can run successfully 
+on our emulator.
+
+
+
+3. TEST PROGRAMS
+From the test programs we got level 0 to level 6 working. Only level 0 (basic.bin) ends with a 
+"Test end marker encountered". The rest ends with a "System halt request" with the desired output. 
+
+
+
+4. CONTRIBUTION TO THE PROJECT AND THE EXPERIENCE OF WORKING TOGETHER
+Dennis Buurman:
+We worked together for the most part of the assignment. At first the diesel engine had to be started. 
+Progress was slow in the beginning, but when we started to understand how to use the program the 
+implementation of new instructions went reasonably fast. The collaboration was good in my opinion. 
+When we had a bug in our program we debugged together. This happened more than a couple times. 
+Fortunately we found the bugs pretty fast. We only worked separately in the last weekend and a couple 
+evenings. The only thing I did on my own was the instruction formatter and some cleanup and comments 
+on the code.
+
+Jerry Schonenberg:
+Our collaboration was excellent in my opinion. We worked on the assignment mostly together, 
+only the instruction formatter, report, unit tests and the last two programs were not made together. 
+Dennis worked on the instruction formatter, report and the unit tests, and I worked on the last two 
+programs. I experienced the collaboration with Dennis as positive. We worked hard and made progress 
+each time we worked on the assignment. Dennis did put enough effort and time into the assignment. 
+So all in all, the collaboration was good.
+
